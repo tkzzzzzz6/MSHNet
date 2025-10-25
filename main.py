@@ -51,7 +51,13 @@ class Trainer(object):
         self.train_loader = Data.DataLoader(trainset, args.batch_size, shuffle=True, drop_last=True)
         self.val_loader = Data.DataLoader(valset, 1, drop_last=False)
 
-        device = torch.device('cuda')
+        # 检查CUDA是否可用，如果不可用则使用CPU
+        if torch.cuda.is_available():
+            device = torch.device('cuda')
+            print("Using GPU for training")
+        else:
+            device = torch.device('cpu')
+            print("CUDA is not available, using CPU instead")
         self.device = device
 
         model = MSHNet(3)
