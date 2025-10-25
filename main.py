@@ -89,9 +89,11 @@ class Trainer(object):
                 self.best_iou = checkpoint['iou']
                 self.save_folder = check_folder
             else:
-                self.save_folder = '/MSHNet/weight/MSHNet-%s'%(time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time())))
-                if not osp.exists(self.save_folder):
-                    os.mkdir(self.save_folder)
+                # 使用相对路径，适配不同环境（本地/Colab）
+                weight_base_dir = './weight'
+                os.makedirs(weight_base_dir, exist_ok=True)
+                self.save_folder = osp.join(weight_base_dir, 'MSHNet-%s'%(time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time()))))
+                os.makedirs(self.save_folder, exist_ok=True)
         if args.mode=='test':
           
             weight = torch.load(args.weight_path)
